@@ -37,9 +37,13 @@
             <div class="container" v-if="images.length > 0">
                 <div class="item-container" v-for="url in images">
                     <div class="pic-container">
-                        <img :src="url" />
+                        <div class="pic-border">
+                            <img :src="url" />
+                        </div>
                     </div>
-                    <p class="description"></p>
+                    <div class="description-container">
+                        <p class="description"></p>
+                    </div>
                 </div>
             </div>
         </div>

@@ -10,7 +10,7 @@ Vue.createApp({
         function fetchImages() {
             const images = [];
             for (let i = 0; i <= 12; i++) {
-                images.push(fetch("https://picsum.photos/200"));
+                images.push(fetch("https://picsum.photos/300"));
             }
             return Promise.all(images);
         }
