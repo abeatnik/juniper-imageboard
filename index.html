@@ -4,8 +4,45 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Image Board</title>
+        <link rel="stylesheet" href="/style.css" />
     </head>
     <body>
+        <div class="home-bar"></div>
+        <div class="home-header">
+            <div class="film-roll-border">
+                <div class="film-roll">
+                    <div class="circle">
+                        <div class="inlay"></div>
+                    </div>
+                    <div class="circle">
+                        <div class="inlay"></div>
+                    </div>
+                    <div class="circle">
+                        <div class="inlay"></div>
+                    </div>
+                    <div class="circle-small"></div>
+                    <div class="circle">
+                        <div class="inlay"></div>
+                    </div>
+                    <div class="circle">
+                        <div class="inlay"></div>
+                    </div>
+                    <div class="circle">
+                        <div class="inlay"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="main">
+            <div class="container" v-if="images.length > 0">
+                <div class="item-container" v-for="url in images">
+                    <div class="pic-container">
+                        <img :src="url" />
+                    </div>
+                    <p class="description"></p>
+                </div>
+            </div>
+        </div>
         <script
             src="/js/app.js"
             type="module"
