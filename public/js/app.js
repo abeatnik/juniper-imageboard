@@ -1,11 +1,10 @@
 import * as Vue from "./vue.js";
 import imageDialogue from "./image-dialogue.js";
 
-const app = Vue.createApp({
+Vue.createApp({
     data() {
         return {
             message: "",
-            items: [],
             images: [],
             currentImage: {
                 username: "",
@@ -16,24 +15,20 @@ const app = Vue.createApp({
                 id: "",
                 created_at: "",
             },
+            imageDialogueId: null,
         };
+    },
+    components: {
+        "image-dialogue": imageDialogue,
     },
     props: [],
     mounted() {
         this.loadImages();
-        // this.getDummyData(12, this.setSelf);
-        // setTimeout(
-        //     window.addEventListener("scroll", this.loadMoreResults),
-        //     500
-        // );
+        // this.insertDummyData(1);
     },
-    // components: {
-    //     "image-dialogue": imageDialogue,
-    // },
     methods: {
         setFile(e) {
             this.currentImage.file = e.target.files[0];
-            console.log(this.currentImage.file);
         },
         upload(e) {
             const formData = new FormData();
@@ -54,7 +49,8 @@ const app = Vue.createApp({
                         this.images.shift(data.currentImage);
                         this.message = data.message;
                     }
-                });
+                })
+                .catch((err) => console.log(err));
         },
         loadImages() {
             fetch("/images")
@@ -66,61 +62,22 @@ const app = Vue.createApp({
             // console.log("target ", e.target);
             // console.log(e.target.scrollTop);
         },
-        showDialogue(e) {},
+        showDialogue(e) {
+            this.imageDialogueId = e.currentTarget.id;
+        },
+        closeDialogue(e) {
+            this.imageDialogueId = null;
+        },
         setSelf(elem) {
             this.items = elem;
         },
-        getDummyData(num, callback) {
-            const dataArray = [];
-            Promise.all([
-                fetchImages(num),
-                fetchHipsterIpsum(num),
-                fetchHipsterIpsum(num),
-            ]).then(function (data) {
-                const images = data[0].map((item) => item.url);
-                const descriptions = data[1].map((sentence) => {
-                    return sentence[0].split(" ").slice(0, 3).join(" ");
-                });
-                const tags = data[2].map((sentence) => {
-                    sentence = sentence[0].split(" ").slice(0, 4);
-                    return sentence;
-                });
-                for (let i = 0; i < num; i++) {
-                    let item = {
-                        url: images[i],
-                        description: descriptions[i],
-                        tags: tags[i],
-                    };
-                    dataArray.push(item);
-                }
-                callback(dataArray);
-            });
+        insertDummyData(num) {
+            for (let i = 0; i < num; i++) {
+                const tagstring = tags[i].join(" ");
+                fetch("/dummy");
+            }
         },
     },
 }).mount("#main");
-
-function fetchImages(num) {
-    const images = [];
-    for (let i = 0; i < num; i++) {
-        images.push(fetch("https://picsum.photos/300"));
-    }
-    return Promise.all(images);
-}
-
-function fetchHipsterIpsum(num) {
-    const descriptions = [];
-    for (let i = 0; i < num; i++) {
-        descriptions.push(
-            fetch(
-                "http://hipsum.co/api/?" +
-                    new URLSearchParams({
-                        type: "hipster-centric",
-                        sentences: 1,
-                    })
-            ).then((response) => response.json())
-        );
-    }
-    return Promise.all(descriptions);
-}
 
 //data defines a function that returns an object in which we can assign the variable that will be used in the app

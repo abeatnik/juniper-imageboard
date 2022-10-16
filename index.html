@@ -10,47 +10,6 @@
         <div class="home-bar">
             <h1>Image Board</h1>
         </div>
-        
-        <div class="home-header">
-            <div class="film-roll-border">
-                <div class="film-roll">
-                    <div class="circles">
-                        <div class="inlay">
-                            <img v-bind:src="circles.shift();" alt="">
-                        </div>
-                    </div>
-                    <div class="circle">
-                        <div class="inlay">
-                            <img v-bind:src="circles[1]" alt="">
-                        </div>
-                    </div>
-                    <div class="circle">
-                        <div class="inlay">
-                            <img v-bind:src="circles[2]" alt="">
-                        </div>
-                    </div>
-                    <div class="circle-small"></div>
-                    <div class="circle">
-                        <div class="inlay">
-                            <img v-bind:src="circles[3]" alt="">
-                        </div>
-                    </div>
-                    <div class="circle">
-                        <div class="inlay">
-                            <img v-bind:src="circles[4]" alt="">
-                        </div>
-                    </div>
-                    <div class="circle">
-                        <div class="inlay">
-                            <img v-bind:src="circles[5]" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="background-curves"></div>
-            <div class="background-curves" id="background-curves-up"></div>
-            <div class="background-curves" id="background-curves-inlay"></div>
-        </div>
         <div id="main">
             <form action="/images" method="post" enctype="multipart/form-data">
                 <label for="title">Title</label>
@@ -69,6 +28,31 @@
                 <input @change="setFile" type="file" name="file" id="image-file" accept="image/*">
                 <input type="button" value="Upload" @click="upload">
             </form>
+            <!-- <div class="film-roll-container">
+                <div class="film-roll-border">
+                    <div class="film-roll">
+                        <div class="circles">
+                        </div>
+                        <div class="circle">
+                        </div>
+                        <div class="circle">
+                            
+                        </div>
+                        <div class="circle-small"></div>
+                        <div class="circle">
+                            
+                        </div>
+                        <div class="circle">
+                        </div>
+                        <div class="circle">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="background-curves"></div>
+                <div class="background-curves" id="background-curves-up"></div>
+                <div class="background-curves" id="background-curves-inlay"></div>
+            </div> -->
             <div class="container" v-if="images.length > 0">
                 <div class="item-container" v-for="image in images" v-bind:id="image.id" @click="showDialogue">
                     <div class="pic-container">
@@ -76,16 +60,19 @@
                             <img :src="image.url" />
                         </div>
                     </div>
-                    <div class="description-container"  v-if="image.title">
-                        <p class="description">{{image.title}}</p>
+                    <div class="title-container"  v-if="image.title">
+                        <p class="title">{{image.title}}</p>
                     </div>
                     <div class="tag-container" v-if="image.tagstring" >
                         <div class="tag-box">{{image.tagstring}}</div>
                     </div>
                 </div>
             </div>
+            <image-dialogue v-bind:id="imageDialogueId" v-if="imageDialogueId" @close="closeDialogue"></image-dialogue>
+
         </div>
-        <!-- <image-dialogue></image-dialogue> -->
+
+
         <!-- <div class="background-css"></div> -->
         <!-- <div class="background-roll">
             <div class="film-roll-border">

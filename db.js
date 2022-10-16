@@ -19,6 +19,11 @@ module.exports.getImagesOlderThan = (timestamp) => {
     return db.query(sql, [timestamp]);
 };
 
+module.exports.getImageById = (id) => {
+    const sql = `SELECT * FROM images WHERE id=$1;`;
+    return db.query(sql, [id]);
+};
+
 module.exports.deleteImageById = (id) => {
     const sql = `DELETE FROM images WHERE id=$1;`;
     return db.query(sql, [id]);

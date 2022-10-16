@@ -35,9 +35,7 @@ app.post("/image", uploader.single("file"), (req, res) => {
         .promise();
 
     insertRemoteImage.then(() => {
-        fs.unlink(path, (err) => {
-            if (err) throw err;
-        });
+        fs.unlinkSync(path);
         db.insertImage(url, username, title, description, tagstring)
             .then((result) => {
                 res.json({
@@ -63,17 +61,84 @@ app.post("/image", uploader.single("file"), (req, res) => {
 
 app.get("/images", (req, res) => {
     db.getImages()
-        .then((data) => {
-            console.log(data.rows);
-            res.json(data.rows);
+        .then((entry) => {
+            res.json(entry.rows);
         })
-        .catch((err) => {
-            console.log(err);
-        });
+        .catch((err) => console.log(err));
 });
 
 app.get("/image/:id", (req, res) => {
-    //get id from request
+    console.log("getImagebyID :", req.params.id);
+    db.getImageById(req.params.id)
+        .then((entry) => {
+            res.json(entry.rows[0]);
+        })
+        .catch((err) => console.log(err));
+});
+
+app.post("/dummy", (req, res) => {
+    const { title, description, username, tagstring } = req.body;
+    let filename = "";
+    fetch("https://picsum.photos/300")
+        .then((response) => response.buffer())
+        .then((buffer) => {
+            filename = uid.sync(24) + ".jpeg";
+            fs.writeFile(`./uploads/${filename}`, buffer);
+        });
+    const url = `https://s3.amazonaws.com/spicedling/${filename}`;
+    const size = fs.statSync(`./uploads/${filename}`).size;
+    console.log("insert dummy image");
+
+    const insertRemoteImage = s3
+        .putObject({
+            Bucket: "spicedling",
+            ACL: "public-read",
+            Key: filename,
+            Body: fs.createReadStream(`./uploads${filename}`),
+            ContentType: "image/jpeg",
+            ContentLength: size,
+        })
+        .promise();
+
+    insertRemoteImage.then(() => {
+        fs.unlinkSync(`./uploads/${filename}`);
+        db.insertImage(url, username, title, description, tagstring)
+            .then((result) => {
+                res.json({
+                    currentImage: {
+                        username: username,
+                        title: title,
+                        description: description,
+                        tagstring: tagstring,
+                        file: url,
+                        id: result.rows[0].id,
+                        created_at: result.rows[0].created_at,
+                    },
+                    success: true,
+                    message:
+                        "Your photo has been added. Thank you for contributing.",
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    });
+
+    function fetchHipsterIpsum(num) {
+        const descriptions = [];
+        for (let i = 0; i < num; i++) {
+            descriptions.push(
+                fetch(
+                    "http://hipsum.co/api/?" +
+                        new URLSearchParams({
+                            type: "hipster-centric",
+                            sentences: 3,
+                        })
+                ).then((response) => response.json())
+            );
+        }
+        return Promise.all(descriptions);
+    }
 });
 
 app.get("*", (req, res) => {

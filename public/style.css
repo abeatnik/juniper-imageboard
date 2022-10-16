@@ -27,13 +27,6 @@ body {
     font-family: Ranade-Bold;
 }
 
-.home-header {
-    grid-row: 2;
-    grid-column: 2;
-    display: flex;
-    justify-content: center;
-}
-
 .film-roll-border {
     height: 320px;
     width: 320px;
@@ -42,6 +35,9 @@ body {
     background-color: #f1eeebfd;
     padding: 4px;
     scale: 0.6;
+    position: absolute;
+    top: 90px;
+    left: 66vw;
     animation: 10s infinite spin;
 }
 .film-roll-border:hover {
@@ -124,6 +120,58 @@ body {
     margin-bottom: 1px;
 }
 
+.background-css {
+    position: absolute;
+    height: 1000px;
+    width: 1000px;
+    left: -500px;
+    top: 1000px;
+    border-radius: 50%;
+    border: 1px solid rgb(85, 85, 85);
+    z-index: -1;
+}
+
+.background-curves {
+    position: absolute;
+    left: -20px;
+    top: 140px;
+    width: 90vw;
+    height: 220px;
+    /* rotate: -55deg; */
+    border-radius: 30%;
+    border-bottom: 2px solid black;
+    z-index: -1;
+}
+
+#background-curves-up {
+    top: 90px;
+    rotate: 2deg;
+    left: -20px;
+}
+
+#background-curves-inlay {
+    height: 214px;
+    width: 90wv;
+    rotate: 1deg;
+    border: none;
+    background: linear-gradient(90deg, black 50%, transparent 50%),
+        linear-gradient(90deg, black 50%, transparent 50%);
+    background-repeat: repeat-x, repeat-x;
+    background-size: 60px 30px;
+    background-position: right bottom;
+    padding: 10px;
+    animation: move-roll 16s infinite linear;
+}
+
+@keyframes move-roll {
+    0% {
+        background-position: right bottom;
+    }
+    100% {
+        background-position: left 98%;
+    }
+}
+
 #main {
     width: 90vw;
     grid-row: 3;
@@ -132,6 +180,7 @@ body {
 
 #main .container {
     width: 100%;
+    margin-top: 120px;
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
@@ -167,7 +216,7 @@ body {
     transform: scale(1.07);
 }
 
-#main .item-container .description-container {
+#main .item-container .title-container {
     margin: -6px 10px 0px 11px;
     width: 302px;
     height: 26px;
@@ -177,7 +226,7 @@ body {
     background-color: #f1eeebfd;
 }
 
-#main .item-container .description-container p {
+#main .item-container .title-container p {
     height: 100%;
     line-height: 20px;
     font-size: 0.8em;
@@ -225,54 +274,111 @@ body {
     font-style: normal;
 }
 
-.background-css {
+#modal-background {
     position: absolute;
-    height: 1000px;
-    width: 1000px;
-    left: -500px;
-    top: 1000px;
-    border-radius: 50%;
-    border: 1px solid rgb(85, 85, 85);
-    z-index: -1;
+    z-index: 2;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background-color: rgba(85, 85, 85, 0.9);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 25vw 50vw 25vw;
 }
 
-.background-curves {
-    position: absolute;
-    left: 0px;
-    top: 160px;
-    width: 55vw;
-    height: 220px;
-    /* rotate: -55deg; */
-    border-radius: 30%;
-    border-bottom: 2px solid black;
-    z-index: -1;
+.modal-dialogue {
+    position: relative;
+    z-index: 3;
+    transition: 1s ease-out;
 }
 
-#background-curves-up {
-    top: 110px;
-    rotate: 2deg;
+.modal-dialogue .description-container,
+.modal-dialogue .user-info {
+    visibility: hidden;
 }
 
-#background-curves-inlay {
-    height: 214px;
-    width: 55wv;
-    rotate: 1deg;
-    border: none;
-    background: linear-gradient(90deg, black 50%, transparent 50%),
-        linear-gradient(90deg, black 50%, transparent 50%);
-    background-repeat: repeat-x, repeat-x;
-    background-size: 60px 30px;
-    background-position: right bottom;
-    padding: 10px;
-    animation: move-roll 16s infinite linear;
+#modal-background .modal-grow {
+    width: 40vw;
+    grid-column: 1;
+    align-self: start;
 }
-@keyframes move-roll {
-    0% {
-        background-position: right bottom;
-    }
-    100% {
-        background-position: left 98%;
-    }
+
+#modal-background .modal-grow .pic-container {
+    width: 40vw;
+    height: 40vw;
+}
+
+#modal-background .modal-grow .pic-border {
+    width: 99.9%;
+    height: 99.9%;
+}
+#modal-background .modal-grow img {
+    width: 100%;
+    height: 100%;
+}
+
+#modal-background .modal-grow .title-container {
+    margin: -6px 10px 0px 11px;
+    width: 39.8vw;
+    height: 40px;
+    border: 1px solid black;
+    padding: 3px;
+    line-height: normal;
+    background-color: #a7a7a7fd;
+    display: flex;
+    flex-direction: column;
+}
+
+#modal-background .modal-grow .title-container .title {
+    height: 50%;
+    font-size: 0.8em;
+    line-height: normal;
+}
+
+#modal-background .modal-grow .title-container .user-info {
+    font-size: 0.7em;
+    align-self: flex-end;
+    padding-right: 4px;
+}
+
+#modal-background .modal-grow .description-container {
+    margin-top: 4px;
+    width: 39.8vw;
+}
+
+#modal-background .modal-grow .tag-container {
+    margin: 4px 10px 0px 8px;
+    width: 39.8vw;
+    display: flex;
+    justify-content: flex-start;
+}
+
+#modal-background .modal-grow .tag-container .tag-box {
+    height: 22px;
+    border: 1px solid black;
+    padding: 2px;
+    line-height: 18px;
+    margin-left: 4px;
+    margin-bottom: 15px;
+    font-size: 0.8em;
+    background-color: #a7a7a7fd;
+}
+
+.modal-grow .description-container,
+.modal-grow .user-info {
+    visibility: unset;
+    z-index: 3;
+    font-size: 0.8em;
+}
+
+.modal-grow .description-container {
+    margin: 6px 10px 0px 11px;
+    width: 49.8vw;
+    height: 26px;
+    border: 1px solid black;
+    padding: 3px;
+    line-height: 20px;
+    background-color: #a7a7a7fd;
 }
 
 .background-roll {
