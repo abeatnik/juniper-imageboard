@@ -1,3 +1,5 @@
+import imageComments from "./image-comments.js";
+
 const imageDialogue = {
     data() {
         return {
@@ -5,6 +7,9 @@ const imageDialogue = {
         };
     },
     props: ["id"],
+    components: {
+        "image-comments": imageComments,
+    },
     mounted() {
         if (this.id) {
             this.getImageInfo(this.id);
@@ -38,7 +43,7 @@ const imageDialogue = {
                 md.classList.add("modal-grow");
                 md.style.left = "28vw";
                 md.style.top = window.scrollY + 10 + "px";
-            }, 300);
+            }, 200);
         },
     },
     template: `
@@ -49,19 +54,19 @@ const imageDialogue = {
                     <img :src="imageObj.url" />
                 </div>
             </div>
-            <div class="title-container"  v-if="imageObj.title">
+            <div class="title-container" >
                 <p class="title">{{imageObj.title}}</p>
                 <p class="user-info">uploaded by <span>{{imageObj.username}}</span> Date: <span>{{imageObj.created_at}}</span></p>
             </div>
-            <div class="description-container" v-if="imageObj.description">
+            <div class="description-container">
                 <p :class="modal-description">{{imageObj.description}}</p>
             </div>
-            <div class="tag-container" v-if="imageObj.tagstring" >
+            <div class="tag-container" >
                 <div class="tag-box">{{imageObj.tagstring}}</div>
             </div>
+            <image-comments v-bind:image-id="id"></image-comments>
         </div>
     </div>
-        
     `,
 };
 

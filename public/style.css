@@ -20,11 +20,21 @@ body {
     grid-row: 1;
     grid-column: 1/4;
     border-bottom: 1px solid black;
+    z-index: 1;
+}
+
+.home-bar .logo-container {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background-color: #cf3f3ffd;
+    margin: 15px 0 0 6vw;
+    z-index: -1;
 }
 
 .home-bar h1 {
-    margin: 8px 0 8px 60px;
-    font-family: Ranade-Bold;
+    margin: 13px 0 8px 100px;
+    font-family: Ranade-Thin;
 }
 
 .film-roll-border {
@@ -178,6 +188,78 @@ body {
     grid-column: 2;
 }
 
+#main .form-container {
+    position: absolute;
+    right: 26px;
+    top: 10px;
+    width: 15vw;
+    height: 15vw;
+    min-width: 180px;
+    min-height: 180px;
+    border-radius: 50%;
+    background-color: #493fcffd;
+    text-align: center;
+    padding: 2em;
+    z-index: 3;
+    transition: 0.4s ease;
+}
+
+#main .form-container:hover {
+    width: 25vw;
+    height: 25vw;
+}
+
+#main .form-container h2 {
+    margin-top: 20px;
+    font-size: 1.6em;
+}
+
+#main .form-container #upload-form {
+    visibility: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+#main .form-container #upload-form label {
+    color: #f1eeebfd;
+    grid-column: 2;
+    justify-self: start;
+    margin-right: 10px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+#main .form-container #upload-form input {
+    grid-column: 3;
+    width: 14em;
+    background-color: #493fcffd;
+    border: none;
+    border-bottom: 1px solid #f1eeebfd;
+    color: #f1eeebfd;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+#main .form-container #upload-form input[type="file"] {
+    border-bottom: none;
+    border-radius: none;
+}
+
+#main .form-container #upload-form input[type="submit"] {
+    grid-column: 2/-1;
+    justify-self: center;
+    width: 5em;
+    height: 2em;
+    border: 1px solid black;
+    background-color: #f1eeebfd;
+    margin-top: 20px;
+    color: black;
+}
+
+#main .form-container #upload-form input:focus {
+    outline: none;
+}
+
 #main .container {
     width: 100%;
     margin-top: 120px;
@@ -276,12 +358,12 @@ body {
 
 #modal-background {
     position: absolute;
-    z-index: 2;
+    z-index: 4;
     width: 100vw;
     top: 0;
     left: 0;
     background-color: rgba(85, 85, 85, 0.9);
-    overflow: hidden;
+    overflow-y: hidden;
     display: grid;
     grid-template-columns: 25vw 50vw 25vw;
 }
@@ -289,7 +371,7 @@ body {
 .modal-dialogue {
     position: relative;
     z-index: 3;
-    transition: 1s ease-out;
+    transition: 1s ease;
 }
 
 .modal-dialogue .description-container,
@@ -367,7 +449,7 @@ body {
 .modal-grow .description-container,
 .modal-grow .user-info {
     visibility: unset;
-    z-index: 3;
+    z-index: 5;
     font-size: 0.8em;
 }
 

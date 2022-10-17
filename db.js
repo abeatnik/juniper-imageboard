@@ -11,11 +11,13 @@ module.exports.insertImage = (url, username, title, description, tagstring) => {
 };
 
 module.exports.getImages = () => {
-    return db.query(`SELECT * FROM images ORDER BY created_at DESC LIMIT 12;`);
+    return db.query(
+        `SELECT *, (SELECT id FROM images ORDER BY created_at ASC LIMIT 1) AS "lowest_id" FROM images ORDER BY created_at DESC LIMIT 12; `
+    );
 };
 
 module.exports.getImagesOlderThan = (timestamp) => {
-    const sql = `SELECT * FROM images ORDER BY created_at DESC WHERE created_at < $1 LIMIT 12`;
+    const sql = `SELECT *, (SELECT id FROM images ORDER BY created_at ASC LIMIT 1) AS "lowest_id" FROM images ORDER BY created_at DESC WHERE created_at < $1 LIMIT 12`;
     return db.query(sql, [timestamp]);
 };
 
@@ -27,4 +29,16 @@ module.exports.getImageById = (id) => {
 module.exports.deleteImageById = (id) => {
     const sql = `DELETE FROM images WHERE id=$1;`;
     return db.query(sql, [id]);
+};
+
+module.exports.insertComment = (imageId, comment, username) => {
+    const sql = `INSERT INTO comments (image_id, comment, username) 
+    VALUES ($1, $2, $3)
+    RETURNING *;`;
+    return db.query(sql, [imageId, comment, username]);
+};
+
+module.exports.getCommentsByImageId = (imageId) => {
+    const sql = `SELECT * FROM comments WHERE image_id=$1 ORDER BY created_at DESC;`;
+    return db.query(sql, [imageId]);
 };

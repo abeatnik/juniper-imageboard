@@ -12,8 +12,6 @@ Vue.createApp({
                 description: "",
                 tagstring: "",
                 file: "",
-                id: "",
-                created_at: "",
             },
             imageDialogueId: null,
         };
@@ -25,6 +23,9 @@ Vue.createApp({
     mounted() {
         this.loadImages();
         // this.insertDummyData(1);
+    },
+    updated() {
+        this.checkScrollPosition();
     },
     methods: {
         setFile(e) {
@@ -44,29 +45,66 @@ Vue.createApp({
             })
                 .then((res) => res.json())
                 .then((data) => {
-                    if (data.success) {
-                        Object.assign(this.currentImage, data.currentImage);
-                        this.images.shift(data.currentImage);
-                        this.message = data.message;
-                    }
+                    this.images.unshift(data.entry);
+                    this.message = data.message;
                 })
                 .catch((err) => console.log(err));
+            this.currentImage = {};
         },
         loadImages() {
             fetch("/images")
                 .then((res) => res.json())
-                .then((data) => this.images.push(...data))
+                .then((data) => {
+                    this.images.push(...data);
+                })
                 .catch((err) => console.log(err));
         },
-        refresh(timestamp) {
-            // console.log("target ", e.target);
-            // console.log(e.target.scrollTop);
+        checkScrollPosition() {
+            if (this.images.length > 0) {
+                const lastEntry = this.images[this.images.length - 1];
+                const lastId = lastEntry.id.toString();
+                const lastNode = document.getElementById(lastId);
+                console.log(lastNode);
+                setTimeout(() => {
+                    document.addEventListener(
+                        "scroll",
+                        (e) => {
+                            if (
+                                1.5 * screen.height + window.scrollY >=
+                                lastNode.offsetTop
+                            ) {
+                                this.loadMoreImages(lastEntry.created_at);
+                            } else {
+                                this.checkScrollPosition();
+                            }
+                        },
+                        {
+                            once: true,
+                        }
+                    );
+                }, 200);
+            }
+        },
+        loadMoreImages(timestamp) {
+            console.log(typeof timestamp);
         },
         showDialogue(e) {
             this.imageDialogueId = e.currentTarget.id;
         },
         closeDialogue(e) {
             this.imageDialogueId = null;
+        },
+        showForm(e) {
+            const form = document.getElementById("upload-form");
+            const uploadText = document.getElementById("upload-prompt");
+            uploadText.style.visibility = "hidden";
+            setTimeout(() => (form.style.visibility = "visible"), 400);
+        },
+        hideForm(e) {
+            const form = document.getElementById("upload-form");
+            const uploadText = document.getElementById("upload-prompt");
+            uploadText.style.visibility = "visible";
+            form.style.visibility = "hidden";
         },
         setSelf(elem) {
             this.items = elem;
