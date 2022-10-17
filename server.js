@@ -80,6 +80,13 @@ app.get("/comments/:imageId", (req, res) => {
     });
 });
 
+app.get("/more/:id", (req, res) => {
+    const id = req.params.id;
+    db.getImagesWithSmallerIdThan(id).then((data) => {
+        res.json(data.rows);
+    });
+});
+
 // app.get("/dummy", (req, res) => {
 //     console.log(req.body);
 // }

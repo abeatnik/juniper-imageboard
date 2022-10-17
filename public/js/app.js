@@ -64,7 +64,6 @@ Vue.createApp({
                 const lastEntry = this.images[this.images.length - 1];
                 const lastId = lastEntry.id.toString();
                 const lastNode = document.getElementById(lastId);
-                console.log(lastNode);
                 setTimeout(() => {
                     document.addEventListener(
                         "scroll",
@@ -73,7 +72,7 @@ Vue.createApp({
                                 1.5 * screen.height + window.scrollY >=
                                 lastNode.offsetTop
                             ) {
-                                this.loadMoreImages(lastEntry.created_at);
+                                this.loadMoreImages(lastEntry.id);
                             } else {
                                 this.checkScrollPosition();
                             }
@@ -85,8 +84,16 @@ Vue.createApp({
                 }, 200);
             }
         },
-        loadMoreImages(timestamp) {
-            console.log(typeof timestamp);
+        loadMoreImages(id) {
+            fetch(`/more/${id}`)
+                .then((response) => response.json())
+                .then((entries) => {
+                    this.images.push(...entries);
+                    const noMoreImages = this.images.some(
+                        (entry) => entry.id === entry.lowest_id
+                    );
+                    !noMoreImages && this.checkScrollPosition();
+                });
         },
         showDialogue(e) {
             this.imageDialogueId = e.currentTarget.id;

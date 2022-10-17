@@ -12,13 +12,13 @@ module.exports.insertImage = (url, username, title, description, tagstring) => {
 
 module.exports.getImages = () => {
     return db.query(
-        `SELECT *, (SELECT id FROM images ORDER BY created_at ASC LIMIT 1) AS "lowest_id" FROM images ORDER BY created_at DESC LIMIT 12; `
+        `SELECT *, (SELECT id FROM images ORDER BY created_at ASC LIMIT 1) AS "lowest_id" FROM images ORDER BY created_at DESC LIMIT 4; `
     );
 };
 
-module.exports.getImagesOlderThan = (timestamp) => {
-    const sql = `SELECT *, (SELECT id FROM images ORDER BY created_at ASC LIMIT 1) AS "lowest_id" FROM images ORDER BY created_at DESC WHERE created_at < $1 LIMIT 12`;
-    return db.query(sql, [timestamp]);
+module.exports.getImagesWithSmallerIdThan = (id) => {
+    const sql = `SELECT *, (SELECT id FROM images ORDER BY created_at ASC LIMIT 1) AS "lowest_id" FROM images WHERE id < $1 ORDER BY created_at DESC LIMIT 4`;
+    return db.query(sql, [id]);
 };
 
 module.exports.getImageById = (id) => {
