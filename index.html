@@ -25,8 +25,8 @@
                 <image-upload  v-if="uploader" @uploaded="showLastEntry" @hideuploader="hideUploader" @failed="showErrorMessage"></image-upload>
             </div> 
             <div class="container" v-if="images.length > 0">
-                <div class="item-container" v-for="image in images" v-bind:id="image.id" @click="showDialogue">
-                    <div class="pic-container">
+                <div class="item-container" v-for="image in images">
+                    <div class="pic-container" v-bind:id="image.id" @click="showDialogue">
                         <div class="pic-border">
                             <img :src="image.url" />
                         </div>
@@ -35,7 +35,7 @@
                         <p class="title">{{image.title}}</p>
                     </div>
                     <div class="tag-container" v-if="image.tags" >
-                        <div class="tag-box" v-for="tag in image.tags">{{tag}}</div>
+                        <div class="tag-box" v-for="tag in image.tags" @click="searchTags">{{tag}}</div>
                     </div>
                 </div>
             </div>

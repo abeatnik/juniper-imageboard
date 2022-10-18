@@ -43,6 +43,7 @@ Vue.createApp({
     },
     methods: {
         loadImages() {
+            history.pushState({}, "", "/");
             this.autoload = true;
             this.images = [];
             fetch("/images")
@@ -92,7 +93,10 @@ Vue.createApp({
                     !noMoreImages && this.checkScrollPosition();
                 });
         },
-        searchTags() {
+        searchTags(e) {
+            if (e.currentTarget) {
+                this.tagsearch = e.currentTarget.innerText;
+            }
             fetch(`/tag/${this.tagsearch}`)
                 .then((response) => response.json())
                 .then((entries) => {
@@ -107,7 +111,7 @@ Vue.createApp({
             this.imageDialogueId = e.currentTarget.id;
             history.pushState({}, "", `/modal/${this.imageDialogueId}`);
         },
-        closeDialogue(e) {
+        closeDialogue() {
             this.imageDialogueId = null;
             history.pushState({}, "", "/");
         },

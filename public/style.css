@@ -18,7 +18,7 @@ body {
 body {
     background-color: #f1eeebfd;
     display: grid;
-    grid-template-rows: 60px, 1fr, 1fr;
+    grid-template-rows: 60px, 1fr;
     gap: 40px;
     grid-template-columns: 5vw, 90vw, 5vw;
     overflow-x: hidden;
@@ -194,7 +194,7 @@ body {
 
 #main {
     width: 90vw;
-    grid-row: 3;
+    grid-row: 2;
     grid-column: 2;
 }
 
@@ -274,6 +274,23 @@ body {
     outline: none;
 }
 
+#main .tag-search-container {
+    margin-top: -28px;
+    width: 100%;
+    display: flex;
+    flex-flow: row no-wrap;
+    justify-content: center;
+}
+
+#main .tag-search-container label {
+    font-size: 0.9em;
+    margin-right: 6px;
+}
+
+#main .tag-search-container button {
+    margin-left: 6px;
+}
+
 #main .container {
     width: 100%;
     margin-top: 120px;
@@ -348,6 +365,9 @@ body {
     font-size: 0.8em;
     background-color: #f1eeebfd;
 }
+#main .item-container .tag-container .tag-box:hover {
+    cursor: pointer;
+}
 
 @font-face {
     font-family: Ranade-Bold;
@@ -379,7 +399,7 @@ body {
     width: 100vw;
     top: 0;
     left: 0;
-    background-color: rgba(85, 85, 85, 0.9);
+    background-color: rgba(85, 85, 85, 0.8);
     overflow-x: hidden;
     display: grid;
     grid-template-columns: 25vw 50vw 25vw;
@@ -392,7 +412,8 @@ body {
 }
 
 .modal-dialogue .description-container,
-.modal-dialogue .user-info {
+.modal-dialogue .user-info,
+.modal-dialogue .comments-container {
     visibility: hidden;
 }
 
@@ -420,11 +441,12 @@ body {
 #modal-background .modal-grow .title-container {
     margin: -6px 10px 0px 11px;
     width: 39.8vw;
-    height: 40px;
+    height: 42px;
     border: 1px solid black;
-    padding: 3px;
+    padding: 4px;
+    padding-bottom: 6px;
     line-height: normal;
-    background-color: #a7a7a7fd;
+    background-color: #c7c7c7fd;
     display: flex;
     flex-direction: column;
 }
@@ -438,7 +460,7 @@ body {
 #modal-background .modal-grow .title-container .user-info {
     font-size: 0.7em;
     align-self: flex-end;
-    padding-right: 4px;
+    padding-right: 5px;
 }
 
 #modal-background .modal-grow .description-container {
@@ -459,13 +481,14 @@ body {
     padding: 2px;
     line-height: 18px;
     margin-left: 4px;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
     font-size: 0.8em;
-    background-color: #a7a7a7fd;
+    background-color: #c7c7c7fd;
 }
 
 .modal-grow .description-container,
-.modal-grow .user-info {
+.modal-grow .user-info,
+.modal-grow .comments-container {
     visibility: unset;
     z-index: 5;
     font-size: 0.8em;
@@ -473,12 +496,103 @@ body {
 
 .modal-grow .description-container {
     margin: 6px 10px 0px 11px;
-    width: 49.8vw;
     height: 26px;
     border: 1px solid black;
     padding: 3px;
     line-height: 20px;
-    background-color: #a7a7a7fd;
+    background-color: #c7c7c7fd;
+}
+
+.modal-grow .comments-container {
+    margin: 6px 10px 0px 11px;
+    width: 39.8vw;
+    padding-bottom: 400px;
+}
+
+.modal-grow .comments-container .add-comments {
+    width: 100%;
+    background-color: #c7c7c7fd;
+    padding: 3px;
+    border: 1px solid black;
+    padding-bottom: 6px;
+}
+
+.modal-grow .comments-container .comment-box {
+    width: 100%;
+    background-color: #c7c7c7fd;
+    padding: 4px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    margin-top: 4px;
+}
+
+.modal-grow .comments-container .comment-box p {
+    font-size: 0.9em;
+    align-self: flex-end;
+    padding-right: 4px;
+    margin-top: 4px;
+}
+
+.modal-grow .comments-container .comment-box h4 {
+    padding: 2px;
+}
+
+.modal-grow .comments-container > h2 {
+    margin: 4px;
+    font-size: 1.3em;
+}
+
+.modal-grow .comments-container .comment-section {
+    width: 100%;
+    background-color: #c7c7c7fd;
+    border: 1px solid black;
+    margin-top: 10px;
+    padding-top: 6px;
+    padding: 1px;
+}
+
+.modal-grow .comments-container .comment-section h2 {
+    font-size: 1.5em;
+    margin-top: 10px;
+    margin-left: 4px;
+}
+
+.modal-grow .comments-container form {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.modal-grow .comments-container textarea {
+    width: 50%;
+    height: 80px;
+    margin-left: 4px;
+}
+
+.modal-grow .comments-container .form-input {
+    margin-left: 8px;
+    display: flex;
+    flex-direction: column;
+    height: 80px;
+}
+
+.modal-grow .comments-container .form-input div {
+    display: flex;
+    flex-direction: row;
+    width: 40%;
+    margin-left: 5%;
+}
+
+.modal-grow .comments-container .form-input input {
+    height: 20px;
+    justify-self: flex-end;
+    margin-left: 8px;
+}
+
+.modal-grow .comments-container form button {
+    margin-top: 30px;
+    align-self: center;
+    justify-self: flex-end;
 }
 
 .background-roll {

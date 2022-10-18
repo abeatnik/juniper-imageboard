@@ -15,7 +15,7 @@ const imageDialogue = {
             this.getImageInfo(this.id);
             const bg = document.getElementById("modal-background");
             const md = document.getElementsByClassName("modal-dialogue")[0];
-            bg.style.minHeight = document.body.offsetHeight * 2 + "px";
+            bg.style.minHeight = document.body.offsetHeight * 1.4 + "px";
 
             if (document.getElementById(this.id)) {
                 const origin = document.getElementById(this.id);
@@ -62,7 +62,7 @@ const imageDialogue = {
             </div>
             <div class="title-container" >
                 <p class="title">{{imageObj.title}}</p>
-                <p class="user-info">uploaded by <span>{{imageObj.username}}</span> Date: <span>{{imageObj.created_at}}</span></p>
+                <p class="user-info">uploaded by {{imageObj.username}} on {{new Date(imageObj.created_at).toLocaleDateString()}} at {{new Date(imageObj.created_at).toLocaleTimeString()}}</p>
             </div>
             <div class="description-container">
                 <p :class="modal-description">{{imageObj.description}}</p>

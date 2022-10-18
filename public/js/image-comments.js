@@ -42,16 +42,25 @@ const imageComments = {
     },
     template: `
         <div class="comments-container">
-            <h2>Comments</h2>
+            <div class="add-comments">
+            <h2>Add a comment:</h2>
             <form action="/comments" method="post" @submit.prevent="uploadComment">
-                <textarea v-model="currentComment.comment" name="comment" id="comment" cols="30" rows="3">new comment</textarea>
-                <label for="username">username</label>
-                <input v-model="currentComment.username" type="text" name="username" id="username">
-                <button type="submit">Submit</button>
+                <textarea v-model="currentComment.comment" name="comment" id="comment" cols="16" rows="3">new comment</textarea>
+                <div class="form-input">
+                    <div>
+                        <label for="username:">username</label>
+                        <input v-model="currentComment.username" type="text" name="username" id="username">
+                    </div>
+                    <button type="submit">Submit</button>
+                </div>
             </form>
+            </div>
+            <div v-if="comments.length > 0" class="comment-section" >
+                <h2>Comments:</h2>
+            </div>
             <div class="comment-box" v-for="entry in comments">
                 <h4>{{entry.comment}}</h4>
-                <p>Created by {{entry.username}} at {{entry.created_at}}</p>
+                <p>comment by {{entry.username}} on {{new Date(entry.created_at).toLocaleDateString()}} at {{new Date(entry.created_at).toLocaleTimeString()}}</p>
             </div>
         </div>
     `,
