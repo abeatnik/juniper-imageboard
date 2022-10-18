@@ -40,8 +40,7 @@ app.post("/image", uploader.single("file"), (req, res) => {
             .then((result) => {
                 res.json({
                     entry: result.rows[0],
-                    message:
-                        "Your photo has been added. Thank you for contributing.",
+                    message: "Photo added!",
                 });
             })
             .catch((err) => {

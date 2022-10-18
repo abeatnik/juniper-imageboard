@@ -13,27 +13,6 @@
             </div>
         </div>
         <div id="main">
-            <div class="form-container" method="post" @mouseenter.stop="showForm" @submit.prevent="upload"> !-->@mouseout.stop="hideForm"
-                <h2 class="message" v-if="currentImage.message">{{currentImage.message}}</h2>
-                <h2 id="upload-prompt" v-if="!currentImage.message">Upload your image to the feed</h2>
-                <form id="upload-form" action="/images" method="post" enctype="multipart/form-data">
-                    <label for="title">Title</label>
-                    <input v-model="currentImage.title" type="text" name="title" id="">
-                    </br>
-                    <label for="description">Description</label>
-                    <input v-model="currentImage.description" type="text" name="description" id="">
-                    </br>
-                    <label for="tagstring">Tags</label>
-                    <input v-model="currentImage.tagstring" type="text" name="tagstring" id="">
-                    </br>
-                    <label for="username">Username</label>
-                    <input v-model="currentImage.username"type="text" name="username" id="">
-                    </br>
-                    <label for="file">File</label>
-                    <input @change="setFile" type="file" name="file" id="image-file" accept="image/*">
-                    <input type="submit" value="Upload">
-                </form>
-            </div>
             <!-- <div class="film-roll-container">
                 <div class="film-roll-border">
                     <div class="film-roll">
@@ -59,6 +38,10 @@
                 <div class="background-curves" id="background-curves-up"></div>
                 <div class="background-curves" id="background-curves-inlay"></div>
             </div> -->
+            <div class="form-container" @mouseenter="showUploader" > 
+                <h2 id="upload-prompt" v-if="!uploader">{{message}}</h2>
+                <image-upload  v-if="uploader" @uploaded="showLastEntry" @hideuploader="hideUploader" ></image-upload>
+            </div> 
             <div class="container" v-if="images.length > 0">
                 <div class="item-container" v-for="image in images" v-bind:id="image.id" @click="showDialogue">
                     <div class="pic-container">

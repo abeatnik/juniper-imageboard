@@ -1,10 +1,11 @@
 import * as Vue from "./vue.js";
 import imageDialogue from "./image-dialogue.js";
+import imageUpload from "./image-upload.js";
 
 Vue.createApp({
     data() {
         return {
-            message: "",
+            message: "Upload \n your \n image",
             images: [],
             currentImage: {
                 username: "",
@@ -14,10 +15,12 @@ Vue.createApp({
                 file: "",
             },
             imageDialogueId: null,
+            uploader: false,
         };
     },
     components: {
         "image-dialogue": imageDialogue,
+        "image-upload": imageUpload,
     },
     props: [],
     mounted() {
@@ -28,29 +31,6 @@ Vue.createApp({
         this.checkScrollPosition();
     },
     methods: {
-        setFile(e) {
-            this.currentImage.file = e.target.files[0];
-        },
-        upload(e) {
-            const formData = new FormData();
-            formData.append("username", this.currentImage.username);
-            formData.append("title", this.currentImage.title);
-            formData.append("description", this.currentImage.description);
-            formData.append("tagstring", this.currentImage.tagstring);
-            formData.append("file", this.currentImage.file);
-
-            fetch("/image", {
-                method: "POST",
-                body: formData,
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    this.images.unshift(data.entry);
-                    this.message = data.message;
-                })
-                .catch((err) => console.log(err));
-            this.currentImage = {};
-        },
         loadImages() {
             fetch("/images")
                 .then((res) => res.json())
@@ -68,11 +48,15 @@ Vue.createApp({
                     document.addEventListener(
                         "scroll",
                         (e) => {
-                            if (
-                                1.5 * screen.height + window.scrollY >=
-                                lastNode.offsetTop
-                            ) {
-                                this.loadMoreImages(lastEntry.id);
+                            if (lastNode) {
+                                if (
+                                    1.5 * screen.height + window.scrollY >=
+                                    lastNode.offsetTop
+                                ) {
+                                    this.loadMoreImages(lastEntry.id);
+                                } else {
+                                    this.checkScrollPosition();
+                                }
                             } else {
                                 this.checkScrollPosition();
                             }
@@ -101,17 +85,25 @@ Vue.createApp({
         closeDialogue(e) {
             this.imageDialogueId = null;
         },
-        showForm(e) {
-            const form = document.getElementById("upload-form");
-            const uploadText = document.getElementById("upload-prompt");
-            uploadText.style.visibility = "hidden";
-            setTimeout(() => (form.style.visibility = "visible"), 400);
+        showUploader() {
+            const message = document.getElementById("upload-prompt");
+            message.style.visibility = "hidden";
+            if (this.uploader === true) {
+                const form = document.getElementById("upload-form");
+                if (form.style.visibility === "hidden") {
+                    form.style.visibility = "visible";
+                }
+            } else {
+                this.uploader = true;
+            }
         },
-        hideForm(e) {
-            const form = document.getElementById("upload-form");
-            const uploadText = document.getElementById("upload-prompt");
-            uploadText.style.visibility = "visible";
-            form.style.visibility = "hidden";
+        hideUploader() {
+            this.uploader = false;
+        },
+        showLastEntry(returnObj) {
+            this.images.unshift(returnObj.entry);
+            this.message = returnObj.message;
+            this.hideUploader();
         },
         setSelf(elem) {
             this.items = elem;
