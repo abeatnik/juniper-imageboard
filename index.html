@@ -22,7 +22,7 @@
             </div>
             <div class="form-container" @mouseenter="showUploader" > 
                 <h2 id="upload-prompt" v-if="!uploader">{{message}}</h2>
-                <image-upload  v-if="uploader" @uploaded="showLastEntry" @hideuploader="hideUploader" ></image-upload>
+                <image-upload  v-if="uploader" @uploaded="showLastEntry" @hideuploader="hideUploader" @failed="showErrorMessage"></image-upload>
             </div> 
             <div class="container" v-if="images.length > 0">
                 <div class="item-container" v-for="image in images" v-bind:id="image.id" @click="showDialogue">

@@ -6,22 +6,22 @@ const imageUpload = {
     },
     props: [],
     mounted() {},
-    beforeUnmount() {
-        console.log("!!!unmounting!!!!");
-    },
     methods: {
         setFile(e) {
             this.currentImage.file = e.target.files[0];
             this.showForm();
         },
         upload(e) {
+            if (Object.keys(this.currentImage).length < 5) {
+                this.$emit("failed", { error: "Please fill out all fields." });
+                return;
+            }
             const formData = new FormData();
             formData.append("username", this.currentImage.username);
             formData.append("title", this.currentImage.title);
             formData.append("description", this.currentImage.description);
             formData.append("tagstring", this.currentImage.tagstring);
             formData.append("file", this.currentImage.file);
-
             fetch("/image", {
                 method: "POST",
                 body: formData,
@@ -37,7 +37,6 @@ const imageUpload = {
             this.$emit("uploaded", returnObj);
         },
         checkInputValue() {
-            console.log("mouse left uploader");
             if (
                 !Object.keys(this.currentImage).some(
                     (key) => this.currentImage[key]
@@ -46,7 +45,6 @@ const imageUpload = {
                 this.$emit("hideuploader");
             } else {
                 const form = document.getElementById("upload-form");
-                console.log(form);
                 form.style.visibility = "hidden";
             }
         },

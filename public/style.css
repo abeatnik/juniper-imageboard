@@ -380,7 +380,7 @@ body {
     top: 0;
     left: 0;
     background-color: rgba(85, 85, 85, 0.9);
-    overflow-y: hidden;
+    overflow-x: hidden;
     display: grid;
     grid-template-columns: 25vw 50vw 25vw;
 }

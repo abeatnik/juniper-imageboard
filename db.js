@@ -16,6 +16,11 @@ module.exports.getImages = () => {
     );
 };
 
+module.exports.validateId = (requestedId) => {
+    sql = `SELECT COUNT (*) FROM images WHERE images.id = $1;`;
+    return db.query(sql, [requestedId]);
+};
+
 module.exports.getImagesWithSmallerIdThan = (id) => {
     const sql = `SELECT *, (SELECT id FROM images ORDER BY created_at ASC LIMIT 1) AS "lowest_id" FROM images WHERE id < $1 ORDER BY created_at DESC LIMIT 4`;
     return db.query(sql, [id]);
@@ -44,6 +49,6 @@ module.exports.getCommentsByImageId = (imageId) => {
 };
 
 module.exports.getImageIdsByTag = (tag) => {
-    const sql = `SELECT * FROM images WHERE $1 = ANY (tags);`;
+    const sql = `SELECT * FROM images WHERE $1 = ANY (tags) ORDER BY created_at DESC;`;
     return db.query(sql, [tag]);
 };

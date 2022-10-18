@@ -15,10 +15,16 @@ const imageDialogue = {
             this.getImageInfo(this.id);
             const bg = document.getElementById("modal-background");
             const md = document.getElementsByClassName("modal-dialogue")[0];
-            const origin = document.getElementById(this.id);
-            bg.style.height = document.body.offsetHeight + "px";
-            md.style.left = origin.offsetLeft - 10 + "px";
-            md.style.top = origin.offsetTop - 10 + "px";
+            bg.style.minHeight = document.body.offsetHeight * 2 + "px";
+
+            if (document.getElementById(this.id)) {
+                const origin = document.getElementById(this.id);
+                md.style.left = origin.offsetLeft - 10 + "px";
+                md.style.top = origin.offsetTop - 10 + "px";
+            } else {
+                md.style.left = "28vw";
+                md.style.top = window.scrollY + 10 + "px";
+            }
             this.growModal();
         }
     },
@@ -27,7 +33,6 @@ const imageDialogue = {
             fetch(`/image/${id}`)
                 .then((response) => response.json())
                 .then((imageObj) => {
-                    console.log(imageObj);
                     this.imageObj = imageObj;
                 });
         },
@@ -38,6 +43,7 @@ const imageDialogue = {
             }
         },
         growModal() {
+            const bg = document.getElementById("modal-background");
             const md = document.getElementsByClassName("modal-dialogue")[0];
             setTimeout(() => {
                 md.classList.add("modal-grow");

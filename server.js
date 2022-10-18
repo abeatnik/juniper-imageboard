@@ -21,7 +21,7 @@ app.post("/image", uploader.single("file"), (req, res) => {
     const { filename, mimetype, size, path } = req.file;
     const url = `https://s3.amazonaws.com/spicedling/${filename}`;
     let tags = tagstring.split(",");
-    tags = tags.map((tag) => tag.trim());
+    tags = tags.map((tag) => tag.trim().toLowerCase());
     const insertRemoteImage = s3
         .putObject({
             Bucket: "spicedling",
@@ -91,104 +91,12 @@ app.get("/tag/:tagsearch", (req, res) => {
     });
 });
 
-// app.get("/dummy", (req, res) => {
-//     console.log(req.body);
-// }
-//     const { title, description, username, tagstring } = req.body;
-//     let filename = "";
-//     fetch("https://picsum.photos/300")
-//         .then((response) => response.buffer())
-//         .then((buffer) => {
-//             filename = uid.sync(24) + ".jpeg";
-//             fs.writeFile(`./uploads/${filename}`, buffer);
-//         });
-//     const url = `https://s3.amazonaws.com/spicedling/${filename}`;
-//     const size = fs.statSync(`./uploads/${filename}`).size;
-//     console.log("insert dummy image");
-
-//     const insertRemoteImage = s3
-//         .putObject({
-//             Bucket: "spicedling",
-//             ACL: "public-read",
-//             Key: filename,
-//             Body: fs.createReadStream(`./uploads${filename}`),
-//             ContentType: "image/jpeg",
-//             ContentLength: size,
-//         })
-//         .promise();
-
-//     insertRemoteImage.then(() => {
-//         fs.unlinkSync(`./uploads/${filename}`);
-//         db.insertImage(url, username, title, description, tagstring)
-//             .then((result) => {
-//                 res.json({
-//                     currentImage: {
-//                         username: username,
-//                         title: title,
-//                         description: description,
-//                         tagstring: tagstring,
-//                         file: url,
-//                         id: result.rows[0].id,
-//                         created_at: result.rows[0].created_at,
-//                     },
-//                     success: true,
-//                     message:
-//                         "Your photo has been added. Thank you for contributing.",
-//                 });
-//             })
-//             .catch((err) => {
-//                 console.log(err);
-//             });
-//     });
-
-//     function fetchHipsterIpsum(num) {
-//         const descriptions = [];
-//         for (let i = 0; i < num; i++) {
-//             descriptions.push(
-//                 fetch(
-//                     "http://hipsum.co/api/?" +
-//                         new URLSearchParams({
-//                             type: "hipster-centric",
-//                             sentences: 3,
-//                         })
-//                 ).then((response) => response.json())
-//             );
-//         }
-//         return Promise.all(descriptions);
-//     }
-
-//                     method: "POST",
-//                     headers: {
-//                         "Content-Type": "text/json",
-//                     },
-//                     body: JSON.stringify({
-//                         title: titles[i],
-//                         description: descriptions[i],
-//                         username: username[i],
-//                         tagstring,
-//                     }),
-//                 }).catch((err) => console.log(err));
-
-//             Promise.all([fetchHipsterIpsum(num), fetchHipsterIpsum(num)]).then(
-//                 function (data) {
-//                     const titles = data[0].map((sentence) => {
-//                         return sentence[0].split(" ").slice(0, 3).join(" ");
-//                     });
-//                     const descriptions = data[0].map((sentence) => {
-//                         return sentence[0].split(" ").slice(1, 7).join(" ");
-//                     });
-//                     const tags = data[1].map((sentence) => {
-//                         sentence = sentence[0].split(" ").slice(0, 4);
-//                         return sentence;
-//                     });
-//                     const username = data[1].map((sentence) => {
-//                         return sentence[0].split(" ")[5];
-//                     });
-
-//                 }
-//             );
-
-// });
+app.get("/validate/:requestedId", (req, res) => {
+    const requestedId = req.params.requestedId;
+    db.validateId(requestedId).then((data) => {
+        res.json(data.rows[0].count);
+    });
+});
 
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));

@@ -32,20 +32,23 @@ Vue.createApp({
     mounted() {
         this.autoload = true;
         this.loadImages();
+        this.checkLocation();
     },
     updated() {
+        this.checkLocation();
         this.checkScrollPosition();
+        window.addEventListener("popstate", (e) => {
+            this.checkLocation();
+        });
     },
     methods: {
         loadImages() {
             this.autoload = true;
-
             this.images = [];
             fetch("/images")
                 .then((res) => res.json())
                 .then((data) => {
                     this.images.push(...data);
-                    console.log(this.images);
                 })
                 .catch((err) => console.log(err));
         },
@@ -102,17 +105,23 @@ Vue.createApp({
         },
         showDialogue(e) {
             this.imageDialogueId = e.currentTarget.id;
+            history.pushState({}, "", `/modal/${this.imageDialogueId}`);
         },
         closeDialogue(e) {
             this.imageDialogueId = null;
+            history.pushState({}, "", "/");
         },
         showUploader() {
             const message = document.getElementById("upload-prompt");
             message.style.visibility = "hidden";
             if (this.uploader === true) {
-                const form = document.getElementById("upload-form");
-                if (form.style.visibility === "hidden") {
-                    form.style.visibility = "visible";
+                if (document.getElementById("upload-form")) {
+                    const form = document.getElementById("upload-form");
+                    if (form.style.visibility === "hidden") {
+                        form.style.visibility = "visible";
+                    }
+                } else {
+                    this.showUploader;
                 }
             } else {
                 this.uploader = true;
@@ -121,10 +130,35 @@ Vue.createApp({
         hideUploader() {
             this.uploader = false;
         },
+        showErrorMessage(errObj) {
+            window.alert(errObj.error);
+        },
         showLastEntry(returnObj) {
             this.images.unshift(returnObj.entry);
             this.message = returnObj.message;
             this.hideUploader();
+        },
+        checkLocation() {
+            const clientLocation = location.pathname.split("/");
+            const requestedId = clientLocation[2];
+            if (
+                clientLocation[1] === "modal" &&
+                !isNaN(parseInt(requestedId))
+            ) {
+                fetch(`/validate/${requestedId}`)
+                    .then((response) => response.json())
+                    .then((count) => {
+                        if (count == 0) {
+                            history.replaceState({}, "", "/");
+                            this.imageDialogueId = null;
+                        } else {
+                            this.imageDialogueId = requestedId;
+                        }
+                    });
+            } else {
+                history.replaceState({}, "", "/");
+                this.imageDialogueId = null;
+            }
         },
     },
 }).mount("#main");
