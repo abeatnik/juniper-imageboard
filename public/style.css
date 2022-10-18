@@ -4,6 +4,16 @@
     padding: 0;
     font-family: Ranade-Thin;
 }
+body {
+    cursor: url("./dot.svg"), auto;
+}
+#main .item-container {
+    cursor: url("./dotbig.svg"), auto;
+}
+
+#main .form-container {
+    cursor: text;
+}
 
 body {
     background-color: #f1eeebfd;

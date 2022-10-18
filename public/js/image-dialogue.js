@@ -61,8 +61,8 @@ const imageDialogue = {
             <div class="description-container">
                 <p :class="modal-description">{{imageObj.description}}</p>
             </div>
-            <div class="tag-container" >
-                <div class="tag-box">{{imageObj.tagstring}}</div>
+            <div class="tag-container" v-if="imageObj.tags" >
+                <div class="tag-box" v-for="tag in imageObj.tags">{{tag}}</div>
             </div>
             <image-comments v-bind:image-id="id"></image-comments>
         </div>

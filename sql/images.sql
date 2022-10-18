@@ -6,6 +6,6 @@ CREATE TABLE images(
     username VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    tagstring TEXT,
+    tags TEXT [],
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

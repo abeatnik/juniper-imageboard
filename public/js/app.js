@@ -1,6 +1,7 @@
 import * as Vue from "./vue.js";
 import imageDialogue from "./image-dialogue.js";
 import imageUpload from "./image-upload.js";
+import animation from "./animation.js";
 
 Vue.createApp({
     data() {
@@ -11,36 +12,45 @@ Vue.createApp({
                 username: "",
                 title: "",
                 description: "",
-                tagstring: "",
+                tags: "",
                 file: "",
+                tagstring: "",
             },
             imageDialogueId: null,
             uploader: false,
+            tagsearch: "",
+            autoload: true,
+            animate: false,
         };
     },
     components: {
         "image-dialogue": imageDialogue,
         "image-upload": imageUpload,
+        animation: animation,
     },
     props: [],
     mounted() {
+        this.autoload = true;
         this.loadImages();
-        // this.insertDummyData(1);
     },
     updated() {
         this.checkScrollPosition();
     },
     methods: {
         loadImages() {
+            this.autoload = true;
+
+            this.images = [];
             fetch("/images")
                 .then((res) => res.json())
                 .then((data) => {
                     this.images.push(...data);
+                    console.log(this.images);
                 })
                 .catch((err) => console.log(err));
         },
         checkScrollPosition() {
-            if (this.images.length > 0) {
+            if (this.images.length > 0 && this.autoload) {
                 const lastEntry = this.images[this.images.length - 1];
                 const lastId = lastEntry.id.toString();
                 const lastNode = document.getElementById(lastId);
@@ -79,6 +89,17 @@ Vue.createApp({
                     !noMoreImages && this.checkScrollPosition();
                 });
         },
+        searchTags() {
+            fetch(`/tag/${this.tagsearch}`)
+                .then((response) => response.json())
+                .then((entries) => {
+                    this.images = [];
+                    this.images.push(...entries);
+                })
+                .catch((err) => console.log(err));
+            this.autoload = false;
+            this.tagsearch = "";
+        },
         showDialogue(e) {
             this.imageDialogueId = e.currentTarget.id;
         },
@@ -104,15 +125,6 @@ Vue.createApp({
             this.images.unshift(returnObj.entry);
             this.message = returnObj.message;
             this.hideUploader();
-        },
-        setSelf(elem) {
-            this.items = elem;
-        },
-        insertDummyData(num) {
-            for (let i = 0; i < num; i++) {
-                const tagstring = tags[i].join(" ");
-                fetch("/dummy");
-            }
         },
     },
 }).mount("#main");

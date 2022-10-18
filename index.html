@@ -8,36 +8,18 @@
     </head>
     <body>
         <div class="home-bar">
+            <!-- <animation v-if="animate"></animation> -->
             <div class="logo-container">
                 <h1>Image Board</h1>
             </div>
         </div>
         <div id="main">
-            <!-- <div class="film-roll-container">
-                <div class="film-roll-border">
-                    <div class="film-roll">
-                        <div class="circles">
-                        </div>
-                        <div class="circle">
-                        </div>
-                        <div class="circle">
-                            
-                        </div>
-                        <div class="circle-small"></div>
-                        <div class="circle">
-                            
-                        </div>
-                        <div class="circle">
-                        </div>
-                        <div class="circle">
-                            
-                        </div>
-                    </div>
-                </div>
-                <div class="background-curves"></div>
-                <div class="background-curves" id="background-curves-up"></div>
-                <div class="background-curves" id="background-curves-inlay"></div>
-            </div> -->
+            <div class="tag-search-container">
+                <label for="tagsearch">Search images by Tag Name: </label>
+                <input type="text" name="tagsearch" v-model="tagsearch" id="tagsearch">
+                <button type="button" @click.prevent="searchTags">Filter</button>
+                <button type="button" @click.prevent="loadImages">Show All</button>
+            </div>
             <div class="form-container" @mouseenter="showUploader" > 
                 <h2 id="upload-prompt" v-if="!uploader">{{message}}</h2>
                 <image-upload  v-if="uploader" @uploaded="showLastEntry" @hideuploader="hideUploader" ></image-upload>
@@ -52,52 +34,13 @@
                     <div class="title-container"  v-if="image.title">
                         <p class="title">{{image.title}}</p>
                     </div>
-                    <div class="tag-container" v-if="image.tagstring" >
-                        <div class="tag-box">{{image.tagstring}}</div>
+                    <div class="tag-container" v-if="image.tags" >
+                        <div class="tag-box" v-for="tag in image.tags">{{tag}}</div>
                     </div>
                 </div>
             </div>
             <image-dialogue v-bind:id="imageDialogueId" v-if="imageDialogueId" @close="closeDialogue"></image-dialogue>
-
         </div>
-
-        <!-- <div class="background-css"></div> -->
-        <!-- <div class="background-roll">
-            <div class="film-roll-border">
-                <div class="film-roll">
-                    <div class="circle">
-                        <div class="inlay">
-                            <img v-bind:src="circles.shift();" alt="">
-                        </div>
-                    </div>
-                    <div class="circle">
-                        <div class="inlay">
-                            <img v-bind:src="circles[1]" alt="">
-                        </div>
-                    </div>
-                    <div class="circle">
-                        <div class="inlay">
-                            <img v-bind:src="circles[2]" alt="">
-                        </div>
-                    </div>
-                    <div class="circle-small"></div>
-                    <div class="circle">
-                        <div class="inlay">
-                            <img v-bind:src="circles[3]" alt="">
-                        </div>
-                    </div>
-                    <div class="circle">
-                        <div class="inlay">
-                            <img v-bind:src="circles[4]" alt="">
-                        </div>
-                    </div>
-                    <div class="circle">
-                        <div class="inlay">
-                            <img v-bind:src="circles[5]" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div> ---->
         <script
             src="/js/app.js"
             type="module"

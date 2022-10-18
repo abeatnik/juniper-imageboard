@@ -3,16 +3,16 @@ const spicedPg = require("spiced-pg");
 const DATABASE_URL = process.env.DATABASE_URL;
 const db = spicedPg(DATABASE_URL);
 
-module.exports.insertImage = (url, username, title, description, tagstring) => {
-    const sql = `INSERT INTO images (url, username, title, description, tagstring)
+module.exports.insertImage = (url, username, title, description, tags) => {
+    const sql = `INSERT INTO images (url, username, title, description, tags)
                 VALUES ($1, $2, $3, $4, $5)
                 RETURNING *;`;
-    return db.query(sql, [url, username, title, description, tagstring]);
+    return db.query(sql, [url, username, title, description, tags]);
 };
 
 module.exports.getImages = () => {
     return db.query(
-        `SELECT *, (SELECT id FROM images ORDER BY created_at ASC LIMIT 1) AS "lowest_id" FROM images ORDER BY created_at DESC LIMIT 4; `
+        `SELECT *, (SELECT id FROM images ORDER BY images.created_at ASC LIMIT 1) AS "lowest_id" FROM images ORDER BY created_at DESC LIMIT 4 ; `
     );
 };
 
@@ -41,4 +41,9 @@ module.exports.insertComment = (imageId, comment, username) => {
 module.exports.getCommentsByImageId = (imageId) => {
     const sql = `SELECT * FROM comments WHERE image_id=$1 ORDER BY created_at DESC;`;
     return db.query(sql, [imageId]);
+};
+
+module.exports.getImageIdsByTag = (tag) => {
+    const sql = `SELECT * FROM images WHERE $1 = ANY (tags);`;
+    return db.query(sql, [tag]);
 };

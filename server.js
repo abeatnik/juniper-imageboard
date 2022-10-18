@@ -20,9 +20,8 @@ app.post("/image", uploader.single("file"), (req, res) => {
     const { title, description, username, tagstring } = req.body;
     const { filename, mimetype, size, path } = req.file;
     const url = `https://s3.amazonaws.com/spicedling/${filename}`;
-
-    console.log("post request for image upload");
-
+    let tags = tagstring.split(",");
+    tags = tags.map((tag) => tag.trim());
     const insertRemoteImage = s3
         .putObject({
             Bucket: "spicedling",
@@ -36,16 +35,15 @@ app.post("/image", uploader.single("file"), (req, res) => {
 
     insertRemoteImage.then(() => {
         fs.unlinkSync(path);
-        db.insertImage(url, username, title, description, tagstring)
+        db.insertImage(url, username, title, description, tags)
             .then((result) => {
+                console.log(result.rows[0]);
                 res.json({
                     entry: result.rows[0],
                     message: "Photo added!",
                 });
             })
-            .catch((err) => {
-                console.log(err);
-            });
+            .catch((err) => console.log(err));
     });
 });
 
@@ -82,6 +80,13 @@ app.get("/comments/:imageId", (req, res) => {
 app.get("/more/:id", (req, res) => {
     const id = req.params.id;
     db.getImagesWithSmallerIdThan(id).then((data) => {
+        res.json(data.rows);
+    });
+});
+
+app.get("/tag/:tagsearch", (req, res) => {
+    const tagsearch = req.params.tagsearch;
+    db.getImageIdsByTag(tagsearch).then((data) => {
         res.json(data.rows);
     });
 });
