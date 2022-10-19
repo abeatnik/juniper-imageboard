@@ -30,9 +30,8 @@ Vue.createApp({
     },
     props: [],
     mounted() {
-        this.autoload = true;
-        this.loadImages();
         this.checkLocation();
+        this.loadImages();
     },
     updated() {
         this.checkLocation();
@@ -43,7 +42,6 @@ Vue.createApp({
     },
     methods: {
         loadImages() {
-            history.pushState({}, "", "/");
             this.autoload = true;
             this.images = [];
             fetch("/images")
@@ -58,28 +56,26 @@ Vue.createApp({
                 const lastEntry = this.images[this.images.length - 1];
                 const lastId = lastEntry.id.toString();
                 const lastNode = document.getElementById(lastId);
-                setTimeout(() => {
-                    document.addEventListener(
-                        "scroll",
-                        (e) => {
-                            if (lastNode) {
-                                if (
-                                    1.5 * screen.height + window.scrollY >=
-                                    lastNode.offsetTop
-                                ) {
-                                    this.loadMoreImages(lastEntry.id);
-                                } else {
-                                    this.checkScrollPosition();
-                                }
+                document.addEventListener(
+                    "scroll",
+                    (e) => {
+                        if (lastNode) {
+                            if (
+                                1.5 * screen.height + window.scrollY >=
+                                lastNode.offsetTop
+                            ) {
+                                this.loadMoreImages(lastEntry.id);
                             } else {
-                                this.checkScrollPosition();
+                                setTimeout(this.checkScrollPosition, 300);
                             }
-                        },
-                        {
-                            once: true,
+                        } else {
+                            setTimeout(this.checkScrollPosition, 300);
                         }
-                    );
-                }, 200);
+                    },
+                    {
+                        once: true,
+                    }
+                );
             }
         },
         loadMoreImages(id) {
@@ -94,14 +90,22 @@ Vue.createApp({
                 });
         },
         searchTags(e) {
-            if (e.currentTarget) {
+            if (e.currentTarget.id !== "filter-button") {
                 this.tagsearch = e.currentTarget.innerText;
+            }
+            if (!this.tagsearch) {
+                this.loadImages;
+                return;
             }
             fetch(`/tag/${this.tagsearch}`)
                 .then((response) => response.json())
                 .then((entries) => {
-                    this.images = [];
-                    this.images.push(...entries);
+                    if (entries.length === 0) {
+                        window.alert(`No image found with this tag!`);
+                    } else {
+                        this.images = [];
+                        this.images.push(...entries);
+                    }
                 })
                 .catch((err) => console.log(err));
             this.autoload = false;

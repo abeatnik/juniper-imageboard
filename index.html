@@ -17,7 +17,7 @@
             <div class="tag-search-container">
                 <label for="tagsearch">Search images by Tag Name: </label>
                 <input type="text" name="tagsearch" v-model="tagsearch" id="tagsearch">
-                <button type="button" @click.prevent="searchTags">Filter</button>
+                <button type="button" id="filter-button" @click.prevent="searchTags">Filter</button>
                 <button type="button" @click.prevent="loadImages">Show All</button>
             </div>
             <div class="form-container" @mouseenter="showUploader" > 
@@ -25,7 +25,7 @@
                 <image-upload  v-if="uploader" @uploaded="showLastEntry" @hideuploader="hideUploader" @failed="showErrorMessage"></image-upload>
             </div> 
             <div class="container" v-if="images.length > 0">
-                <div class="item-container" v-for="image in images">
+                <div class="item-container main-container" v-for="image in images">
                     <div class="pic-container" v-bind:id="image.id" @click="showDialogue">
                         <div class="pic-border">
                             <img :src="image.url" />

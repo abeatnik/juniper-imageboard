@@ -52,3 +52,13 @@ module.exports.getImageIdsByTag = (tag) => {
     const sql = `SELECT * FROM images WHERE $1 = ANY (tags) ORDER BY created_at DESC;`;
     return db.query(sql, [tag]);
 };
+
+module.exports.getPreviousImage = (imageId) => {
+    const sql = `SELECT * FROM images WHERE id < $1 ORDER BY id DESC LIMIT 1;`;
+    return db.query(sql, [imageId]);
+};
+
+module.exports.getNextImage = (imageId) => {
+    const sql = `SELECT * FROM images WHERE id > $1 ORDER BY id ASC LIMIT 1;`;
+    return db.query(sql, [imageId]);
+};

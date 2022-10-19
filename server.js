@@ -98,6 +98,19 @@ app.get("/validate/:requestedId", (req, res) => {
     });
 });
 
+app.get("/neighbors/:imageId", (req, res) => {
+    const imageId = req.params.imageId;
+    const prevNext = [];
+    db.getPreviousImage(imageId).then((entry) => {
+        prevNext.push(entry.rows[0]);
+        db.getNextImage(imageId).then((entry) => {
+            prevNext.push(entry.rows[0]);
+            console.log(prevNext);
+            res.json(prevNext);
+        });
+    });
+});
+
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });

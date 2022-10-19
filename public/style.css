@@ -357,6 +357,7 @@ body {
 
 #main .item-container .tag-container .tag-box {
     height: 22px;
+    border-radius: 2px;
     border: 1px solid black;
     padding: 2px;
     line-height: 18px;
@@ -365,8 +366,9 @@ body {
     font-size: 0.8em;
     background-color: #f1eeebfd;
 }
-#main .item-container .tag-container .tag-box:hover {
+#main .main-container .tag-container .tag-box:hover {
     cursor: pointer;
+    background-color: rgba(149, 149, 149, 0.2);
 }
 
 @font-face {
@@ -403,6 +405,59 @@ body {
     overflow-x: hidden;
     display: grid;
     grid-template-columns: 25vw 50vw 25vw;
+}
+
+#modal-background .previous-modal {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    top: 20vw;
+    right: 11vw;
+    animation: showButtons 4s 1;
+}
+
+#modal-background .next-modal {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    top: 20vw;
+    left: 11vw;
+    animation: showButtons 4s 1;
+}
+
+#modal-background .next-modal div:hover {
+    cursor: pointer;
+    border-right: 50px solid #d0cecdfd;
+}
+
+#modal-background .previous-modal div:hover {
+    cursor: pointer;
+    border-left: 50px solid #d0cecdfd;
+}
+
+#modal-background .previous-modal > div {
+    width: 0;
+    height: 0;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-left: 50px solid #f1eeebfd;
+}
+
+#modal-background .next-modal > div {
+    width: 0;
+    height: 0;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-right: 50px solid #f1eeebfd;
+}
+
+@keyframes showButtons {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 .modal-dialogue {
